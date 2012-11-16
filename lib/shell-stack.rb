@@ -16,13 +16,14 @@ module Shell
       File.open(path, 'w') do |f|
         f.write [].to_yaml
       end
+      puts "#{stack_name} created."
     end
 
     def self.count(stack_name)
       init
       path = "#{STACK_DIR}/#{stack_name}.stack"
       datas = YAML.load_file(path)
-      datas.flatten.count
+      puts(datas.flatten.count)
     end
 
     def self.list(stack_name)
