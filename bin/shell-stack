@@ -7,7 +7,7 @@ stack_name = ARGV.shift
 
 case command
 when 'new'
-  Shell::Stack.new(stack_name)
+  Shell::Stack.create(stack_name)
 when 'count'
   Shell::Stack.count(stack_name)
 when 'list'
