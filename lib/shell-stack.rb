@@ -14,7 +14,9 @@ module Shell
       path = "#{STACK_DIR}/#{stack_name}.stack"
       FileUtils.rm(path, {:force => true})
       File.open(path, 'w') do |f|
+        f.flock(File::LOCK_EX)
         f.write [].to_yaml
+        f.flock(File::LOCK_UN)
       end
       puts "#{stack_name} created."
     end
@@ -41,7 +43,9 @@ module Shell
       datas = YAML.load_file(path)
       datas = datas.flatten.push values
       File.open(path, 'w') do |f|
+        f.flock(File::LOCK_EX)
         f.write datas.flatten.to_yaml
+        f.flock(File::LOCK_UN)
       end
     end
 
@@ -50,7 +54,9 @@ module Shell
       datas = YAML.load_file(path)
       result = datas.pop num_of_pop
       File.open(path, 'w') do |f|
+        f.flock(File::LOCK_EX)
         f.write datas.to_yaml
+        f.flock(File::LOCK_UN)
       end
       puts Array(result).join(' ')
     end
