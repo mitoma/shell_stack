@@ -12,9 +12,25 @@ module Shell
     def self.create(stack_name)
       init
       path = "#{STACK_DIR}/#{stack_name}.stack"
-      FileUtils.rm(path)
+      FileUtils.rm(path, {:force => true})
       File.open(path, 'w') do |f|
-        f.write []
+        f.write [].to_yaml
+      end
+    end
+
+    def self.count(stack_name)
+      init
+      path = "#{STACK_DIR}/#{stack_name}.stack"
+      datas = YAML.load_file(path)
+      datas.flatten.count
+    end
+
+    def self.list(stack_name)
+      init
+      path = "#{STACK_DIR}/#{stack_name}.stack"
+      datas = YAML.load_file(path)
+      datas.flatten.each do |value|
+        puts value
       end
     end
 
@@ -35,7 +51,7 @@ module Shell
       File.open(path, 'w') do |f|
         f.write datas.to_yaml
       end
-      result
+      puts Array(result).join(' ')
     end
   end
 end

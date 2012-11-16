@@ -1,0 +1,23 @@
+#!/usr/bin/env ruby
+BASE_DIR = File.expand_path(__FILE__.gsub(%r{/[^/]+\z},'') + "/../")
+require "#{BASE_DIR}/lib/shell-stack"
+
+command = ARGV.shift
+stack_name = ARGV.shift
+
+case command
+when 'new'
+  Shell::Stack.push(stack_name)
+when 'count'
+  Shell::Stack.count(stack_name)
+when 'list'
+  Shell::Stack.list(stack_name)
+when 'push'
+  values = ARGV
+  Shell::Stack.push(stack_name, values)
+when 'pop'
+  num_of_pop = ARGV.to_i
+  Shell::Stack.pop(stack_name, (num_of_pop == 0) ? 1 : num_of_pop)
+else
+  puts "Usage: shell-stack new|count|list|push|pop stack_name [args]"
+end
