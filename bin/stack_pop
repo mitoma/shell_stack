@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-BASE_DIR = File.expand_path(__FILE__.gsub(%r{/[^/]+\z},'') + "/../")
-require "#{BASE_DIR}/lib/shell-stack"
-
-stack_name = ARGV.shift
-num_of_pop = ARGV.shift.to_i
-
-result = Shell::Stack.pop(stack_name, (num_of_pop == 0) ? 1 : num_of_pop)
-puts Array(result).join(' ')
