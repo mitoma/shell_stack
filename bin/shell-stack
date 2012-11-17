@@ -18,6 +18,10 @@ when 'push'
 when 'pop'
   num_of_pop = ARGV.shift.to_i
   Shell::Stack::Base.new(stack_name).pop((num_of_pop == 0) ? 1 : num_of_pop)
+when 'stacks'
+  Shell::Stack::Base.stacks
+when 'delete_all'
+  Shell::Stack::Base.delete_all
 else
-  puts "Usage: shell-stack new|count|list|push|pop stack_name [args]"
+  puts "Usage: shell-stack new|count|list|push|pop|stacks|delete_all [stack_name] [args]"
 end

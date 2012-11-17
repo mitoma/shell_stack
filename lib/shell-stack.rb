@@ -7,6 +7,20 @@ module Shell
     STACK_DIR = "#{ENV['HOME']}/.shell_stack"
 
     class Base
+      def self.stacks
+        Dir["#{STACK_DIR}/*.stack"].each do |stack|
+          stack =~ %r[\A#{STACK_DIR}/(.+).stack\z]
+          puts $1
+        end
+      end
+
+      def self.delete_all
+        Dir["#{STACK_DIR}/*.stack"].each do |stack|
+          FileUtils.rm(stack, {:force => true})
+        end
+        puts "delete all stacks."
+      end
+
       def initialize(stack_name)
         @stack_name = stack_name
         FileUtils.mkdir_p(STACK_DIR)
@@ -24,7 +38,7 @@ module Shell
           f.flush
           f.flock(File::LOCK_UN)
         end
-        puts "#{@stack_name} created."
+        puts "create or clear #{@stack_name}."
       end
 
       def count
