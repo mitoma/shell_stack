@@ -4,8 +4,8 @@ require File.expand_path('../lib/shell-stack/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = ["Mitoma Ryo"]
   gem.email         = ["mutetheradio@gmail.com"]
-  gem.description   = %q{shellscript stack tool}
-  gem.summary       = %q{shellscript stack tool}
+  gem.description   = %q{simple stack for shellscript}
+  gem.summary       = %q{simple stack for shellscript}
   gem.homepage      = ""
 
   gem.files         = `git ls-files`.split($\)
