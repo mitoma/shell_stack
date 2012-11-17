@@ -7,17 +7,17 @@ stack_name = ARGV.shift
 
 case command
 when 'new'
-  Shell::Stack.create(stack_name)
+  Shell::Stack::Base.new(stack_name).create
 when 'count'
-  Shell::Stack.count(stack_name)
+  Shell::Stack::Base.new(stack_name).count
 when 'list'
-  Shell::Stack.list(stack_name)
+  Shell::Stack::Base.new(stack_name).list
 when 'push'
   values = ARGV
-  Shell::Stack.push(stack_name, values)
+  Shell::Stack::Base.new(stack_name).push(values)
 when 'pop'
   num_of_pop = ARGV.shift.to_i
-  Shell::Stack.pop(stack_name, (num_of_pop == 0) ? 1 : num_of_pop)
+  Shell::Stack::Base.new(stack_name).pop((num_of_pop == 0) ? 1 : num_of_pop)
 else
   puts "Usage: shell-stack new|count|list|push|pop stack_name [args]"
 end

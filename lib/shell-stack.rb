@@ -1,67 +1,82 @@
-require File.expand_path('../shell-stack/version',__FILE__)
+require File.expand_path('../shell-stack/version', __FILE__)
 require 'fileutils'
 require 'yaml'
 
 module Shell
   module Stack
     STACK_DIR = "#{ENV['HOME']}/.shell_stack"
-    def self.init
-      FileUtils.mkdir_p(STACK_DIR)
-    end
 
-    def self.create(stack_name)
-      init
-      path = "#{STACK_DIR}/#{stack_name}.stack"
-      FileUtils.rm(path, {:force => true})
-      File.open(path, File::RDWR|File::CREAT) do |f|
-        f.flock(File::LOCK_EX)
-        f.write [].to_yaml
-        f.flush
-        f.flock(File::LOCK_UN)
+    class Base
+      def initialize(stack_name)
+        @stack_name = stack_name
+        FileUtils.mkdir_p(STACK_DIR)
       end
-      puts "#{stack_name} created."
-    end
 
-    def self.count(stack_name)
-      init
-      path = "#{STACK_DIR}/#{stack_name}.stack"
-      datas = YAML.load_file(path)
-      puts(datas.flatten.count)
-    end
-
-    def self.list(stack_name)
-      init
-      path = "#{STACK_DIR}/#{stack_name}.stack"
-      datas = YAML.load_file(path)
-      datas.flatten.each do |value|
-        puts value
+      def path
+        "#{STACK_DIR}/#{@stack_name}.stack"
       end
-    end
 
-    def self.push(stack_name, values)
-      init
-      path = "#{STACK_DIR}/#{stack_name}.stack"
-      datas = YAML.load_file(path)
-      datas = datas.flatten.push values
-      File.open(path, File::RDWR|File::CREAT) do |f|
-        f.flock(File::LOCK_EX)
-        f.write datas.flatten.to_yaml
-        f.flush
-        f.flock(File::LOCK_UN)
+      def create
+        FileUtils.rm(path, {:force => true})
+        File.open(path, 'w') do |f|
+          f.flock(File::LOCK_EX)
+          f.write [].to_yaml
+          f.flush
+          f.flock(File::LOCK_UN)
+        end
+        puts "#{@stack_name} created."
       end
-    end
 
-    def self.pop(stack_name, num_of_pop = 1)
-      path = "#{STACK_DIR}/#{stack_name}.stack"
-      datas = YAML.load_file(path)
-      result = datas.pop num_of_pop
-      File.open(path, File::RDWR|File::CREAT) do |f|
-        f.flock(File::LOCK_EX)
-        f.write datas.to_yaml
-        f.flush
-        f.flock(File::LOCK_UN)
+      def count
+        check_stack
+        datas = YAML.load_file(path)
+        puts(datas.flatten.count)
       end
-      puts Array(result).join(' ')
+
+      def list
+        check_stack
+        datas = YAML.load_file(path)
+        datas.flatten.each do |value|
+          puts value
+        end
+      end
+
+      def push(values)
+        check_stack
+        File.open(path, File::RDWR|File::CREAT) do |f|
+          f.flock(File::LOCK_EX)
+          datas = YAML.load(f.read)
+          datas = datas.flatten.push values
+          f.rewind
+          f.write datas.flatten.to_yaml
+          f.flush
+          f.truncate(f.pos)
+          f.flock(File::LOCK_UN)
+        end
+      end
+
+      def pop(num_of_pop = 1)
+        check_stack
+        result = ""
+        File.open(path, File::RDWR|File::CREAT) do |f|
+          f.flock(File::LOCK_EX)
+          datas = YAML.load(f.read)
+          result = datas.pop num_of_pop
+          f.rewind
+          f.write datas.to_yaml
+          f.flush
+          f.truncate(f.pos)
+          f.flock(File::LOCK_UN)
+        end
+        puts Array(result).join(' ')
+      end
+
+      def check_stack
+        unless File.exists?(path)
+          puts "stack #{@stack_name} is not found."
+          exit 1
+        end
+      end
     end
   end
 end
