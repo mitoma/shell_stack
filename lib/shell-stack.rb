@@ -8,9 +8,9 @@ module Shell
 
     class Base
       def self.stacks
-        Dir["#{STACK_DIR}/*.stack"].each do |stack|
+        Dir["#{STACK_DIR}/*.stack"].map do |stack|
           stack =~ %r[\A#{STACK_DIR}/(.+).stack\z]
-          puts $1
+          $1
         end
       end
 
@@ -18,7 +18,6 @@ module Shell
         Dir["#{STACK_DIR}/*.stack"].each do |stack|
           FileUtils.rm(stack, {:force => true})
         end
-        puts "delete all stacks."
       end
 
       def initialize(stack_name)
@@ -38,21 +37,18 @@ module Shell
           f.flush
           f.flock(File::LOCK_UN)
         end
-        puts "create or clear #{@stack_name}."
       end
 
       def count
         check_stack
         datas = YAML.load_file(path)
-        puts(datas.flatten.count)
+        datas.flatten.count
       end
 
       def list
         check_stack
         datas = YAML.load_file(path)
-        datas.flatten.each do |value|
-          puts value
-        end
+        datas.flatten
       end
 
       def push(values)
@@ -82,7 +78,7 @@ module Shell
           f.truncate(f.pos)
           f.flock(File::LOCK_UN)
         end
-        puts Array(result).join(' ')
+        Array(result)
       end
 
       def check_stack
