@@ -18,7 +18,7 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+    Usage: shell_stack new|count|list|push|pop|stacks|delete_all [stack_name] [args]
 
 ## Contributing
 
