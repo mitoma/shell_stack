@@ -1,4 +1,4 @@
-require File.expand_path('../shell-stack/version', __FILE__)
+require File.expand_path('../shell_stack/version', __FILE__)
 require 'fileutils'
 require 'yaml'
 
