@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 BASE_DIR = File.expand_path(__FILE__.gsub(%r{/[^/]+\z},'') + "/../")
-require "#{BASE_DIR}/lib/shell-stack"
+require "#{BASE_DIR}/lib/shell_stack"
 
 command = ARGV.shift
 stack_name = ARGV.shift
@@ -34,5 +34,5 @@ when 'delete_all'
   Shell::Stack::Base.delete_all
   puts "delete all stacks."
 else
-  puts "Usage: shell-stack new|count|list|push|pop|stacks|delete_all [stack_name] [args]"
+  puts "Usage: shell_stack new|count|list|push|pop|stacks|delete_all [stack_name] [args]"
 end
