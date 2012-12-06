@@ -1,6 +1,6 @@
 # Shell::Stack
 
-TODO: Write a gem description
+    simple stack for shellscript.
 
 ## Installation
 
